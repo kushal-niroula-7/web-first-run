@@ -1,0 +1,20 @@
+﻿@using WebFirstRun.ViewModels
+@model UserListVm
+
+
+@Model.Users.Count() users found
+
+
+// For each
+@{
+    var x = 120;
+}
+<ul>
+    @foreach (var user in Model.Users)
+    {
+        <li> @user.Name - @user.Id </li>
+    }
+</ul>
+@x
+
+abc@@gmail.com
