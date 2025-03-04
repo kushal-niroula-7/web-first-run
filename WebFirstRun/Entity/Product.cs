@@ -14,7 +14,7 @@ public class Product
 
     public bool IsActive { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
     // CategoryId
