@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebFirstRun.Data;
 using WebFirstRun.Entity;
+using WebFirstRun.Services.Interfaces;
 using WebFirstRun.ViewModels.ProductVms;
 
 namespace WebFirstRun.Controllers;
@@ -10,10 +11,12 @@ namespace WebFirstRun.Controllers;
 public class ProductController : Controller
 {
     private readonly FirstRunDbContext dbContext;
+    private readonly IProductService productService;
 
-    public ProductController(FirstRunDbContext dbContext)
+    public ProductController(FirstRunDbContext dbContext, IProductService productService)
     {
         this.dbContext = dbContext;
+        this.productService = productService;
     }
 
     // Create Product Form
@@ -52,13 +55,14 @@ public class ProductController : Controller
                 throw new Exception("Product Category not found");
             }
 
-            var product = new Product();
-            product.Name = vm.Name;
-            product.Category = productCategory;
-            product.Description = vm.Description;
+            // Mapping vm to Dto
+            var dto = new Dto.ProductDtos.CreateProductDto();
+            dto.Name = vm.Name;
+            dto.ProductCategory = productCategory;
+            dto.Description = vm.Description;
 
-            dbContext.Products.Add(product);
-            await dbContext.SaveChangesAsync();
+            await productService.Create(dto);
+
             return RedirectToAction("Index");
         }
         catch (Exception e)
@@ -128,19 +132,12 @@ public class ProductController : Controller
                 throw new Exception("Product Category not found");
             }
 
-            var product = await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (product == null)
-            {
-                throw new Exception("Product not found");
-            }
+            var dto = new Dto.ProductDtos.UpdateProductDto();
+            dto.Name = vm.Name;
+            dto.ProductCategory = productCategory;
+            dto.Description = vm.Description;
 
-            product.Name = vm.Name;
-            product.Category = productCategory;
-            product.Description = vm.Description;
-
-            dbContext.Products.Update(product);
-
-            await dbContext.SaveChangesAsync();
+            await productService.Update(id, dto);
             
             return RedirectToAction("Index");
         }

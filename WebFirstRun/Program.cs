@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebFirstRun.Data;
+using WebFirstRun.Services;
+using WebFirstRun.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +17,10 @@ builder.Services.AddDbContext<FirstRunDbContext>(builder => {
 });
 
 
-
-
-
+// Add a service to service container as Scoped
+// When I ask for `IProductService` give me object of `ProductService`
+builder.Services.AddScoped<IProductService, ProductService>();
+// Creates a dependency graph
 
 
 var app = builder.Build();
