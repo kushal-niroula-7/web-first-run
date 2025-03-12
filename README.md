@@ -88,3 +88,71 @@ Id | ProductId | UnitId | Position
 	-> dotnet ef migrations add "name"
 	-> dotnet ef database update
 		
+
+
+## Adding Services
+
+
+
+Controller
+	-> Mediator
+		-> Gets request from View
+		-> Does some basic validation
+		-> Forwards the request to a handler service
+
+Handler / Service
+	-> Performs the actual task
+	
+## Conceptual logic
+
+1. Create a service class
+2. Move logic to service class
+----------------
+## Actual Implementation
+1. Create an interface for our service (For DI and testing) ✅
+2. Create the service class that implements the above interface ✅
+3. Create request object / DTO (Data transfer object) ✅
+4. Move the logic from controller to Service ✅
+	- Identify MVC logic vs business logic
+		-> MVC logic resided in controller
+		-> Business logic, goes to services
+5. Call the service: If necessary, perform Vm to Dto mapping ✅
+	-> Service Registration | IOC Registration
+	-> Service Injection
+	-> Method call | Message Passing	
+
+Dto Vs ViewModel (VM)
+--------------------------
+- Intent: DTO is for data transfer between Controller and Service
+		  VM is for data transfer between Controller and View
+
+- Data: DTO contains references to Entities
+		VM contains just Ids
+		
+## Service Lifetime
+
+// Within a scope, multiple get will return same intance
+// In different scope, we get different instance
+builder.Services.AddScoped
+
+// Inside a single scope
+{
+		var item = Services.Get(IProductService);
+		var item1= Services.Get(IProductService);
+		var item2 = Services.Get(IProductService);
+		var item3 = Services.Get(IProductService);
+		
+		// All are same
+}
+
+In asp.net core: A scope is an http request
+-> User sends a request
+	-> Create a new scope
+	-> Everything happens within this scope
+	-> Scope is disposed
+
+// Everytime you ask, you get different instance
+builder.Services.AddTransient
+
+// Everytime single instance
+builder.Services.AddSingleton
