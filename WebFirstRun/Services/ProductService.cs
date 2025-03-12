@@ -1,4 +1,5 @@
 using System;
+using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using WebFirstRun.Data;
 using WebFirstRun.Dto.ProductDtos;
@@ -17,6 +18,7 @@ public class ProductService : IProductService
     }
     public async Task Create(CreateProductDto dto)
     {
+        using var txn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var product = new Product();
         product.Name = dto.Name;
         product.Category = dto.ProductCategory;
@@ -24,10 +26,12 @@ public class ProductService : IProductService
 
         dbContext.Products.Add(product);
         await dbContext.SaveChangesAsync();
+        txn.Complete();
     }
 
     public async Task Update(int productId, UpdateProductDto dto)
     {
+        using var txn = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var product = await dbContext.Products.Where(x => x.Id == productId).FirstOrDefaultAsync();
         if (product == null)
         {
@@ -41,5 +45,6 @@ public class ProductService : IProductService
         dbContext.Products.Update(product);
 
         await dbContext.SaveChangesAsync();
+        txn.Complete();
     }
 }
