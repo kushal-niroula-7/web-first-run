@@ -156,3 +156,41 @@ builder.Services.AddTransient
 
 // Everytime single instance
 builder.Services.AddSingleton
+
+
+
+## March  17 2025
+
+
+API : Application Programming Interface
+Way to interact with a system
+
+Web:
+Pages - For Humans
+URL with standard format data: For internal/external applications
+	-- JSON
+NON-REST
+	- /api/product/create
+	- /api/product/update
+	- /api/product/list
+
+REST: Use HTTP verbs
+	- Create: HTTP Post /api/product -- /resource
+	- Update: HTTP PUT PATCH /api/product/{id}
+		- PUT = For entire data update
+		- PATCH = For partial data update
+	- List: HTTP GET /api/product
+	- Single Item: HTTP GET /api/product/{id}
+	- Delete: HTTP DELETE /api/product/{id}
+	
+	- GET: /api/product-category/{id}/product
+		-- ❌ Update / Create / Delete
+		-- Gets the data
+			- Gets a list of products under the product category with Id = {id}
+
+Task:
+- Implement Rest API CRUD for product category and product
+
+- Add a API reference client
+-- Add Swagger
+-- Add Scalar
